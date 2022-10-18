@@ -19,9 +19,8 @@ language = 'english'
 corpus = "corpus1"
 
 base_path = paths["base_path"]
-#model_string = "/mount/arbeitsdaten20/projekte/cik/users/wei/HistBERT/HistBERT-prototype"
-model_string='bert-base-multilingual-cased'
-reload=False
+model_string = "bert-base-multilingual-cased"
+
 output_path = paths["bert_embeddings"]
 
 max_length_sentence = 70
@@ -35,31 +34,20 @@ base_out_path = f"{output_path}{language}/{corpus}/"
 os.makedirs(base_out_path, exist_ok=True)
 
 data_loader = SentenceLoader(base_path, language=language, corpus=corpus)
-bert_model = BertWrapper(model_string=model_string,reload=reload)
+bert_model = BertWrapper(model_string=model_string)
 
 # load the data and the target words
 target_words, sentences = data_loader.load()
-target_words = [target.split('_')[0] for target in target_words]
 
 # prepare the sentences
 sentences = preprocessing.sanitized_sentences(sentences, max_len=max_length_sentence)
-sentences = [item for item in sentences]
-
 sentences = preprocessing.filter_for_words(sentences, target_words)
-#print(len(sentences))
-
 sentences = preprocessing.remove_pos_tagging(sentences, target_words)
-sent = [item for item in sentences]
-#print(len(sent))
+sentences = preprocessing.remove_numbers(sentences)
 
-sentences = preprocessing.remove_numbers(sent)
-#print(len(sentences))
-
-
-# target_words = [preprocessing.remove_pos_tagging_word(word) for word in target_words]
+target_words = [preprocessing.remove_pos_tagging_word(word) for word in target_words]
 
 # tokenize sentences
-
 tokenized_target_sentences = bert_model.tokenize_sentences(sentences, target_words)
 
 # allocate dicts to save embeddings and sentences mapped to target words
@@ -69,19 +57,12 @@ target_sentences_dict = {target: [] for target in target_words}
 bert_model.enter_eval_mode()
 
 # compute the embeddings
-
 for tokenized_sentence, target_word_idx_dict in tqdm.tqdm(tokenized_target_sentences):
-
-    #print("==============we are here===========",tokenized_sentence, target_word_idx_dict)
     input_ids = bert_model.get_tokenized_input_ids(tokenized_sentence, padding_length=padding_length)
     attention_mask = bert_model.get_attention_mask(input_ids)
 
     input_id_tensor = torch.tensor([input_ids])
     attention_mask_tensor = torch.tensor([attention_mask])
-    #print("==============input_ids===========", input_id_tensor)
-    #print("==============attention_mask_tensor===========", attention_mask_tensor)
-    #print("==============target_word_idx_dict===========", target_word_idx_dict)
-
     target_embeddings = bert_model.compute_embeddings(input_id_tensor, attention_mask_tensor, target_word_idx_dict)
     for target, embeddings in target_embeddings.items():
         target_embeddings_dict[target].extend(embeddings)

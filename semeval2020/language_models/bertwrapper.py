@@ -1,21 +1,17 @@
 from pytorch_pretrained_bert import BertTokenizer, BertModel
 #from keras.preprocessing.sequence import pad_sequences
 from keras_preprocessing.sequence import pad_sequences
+
 import torch
 import numpy as np
 
 
 class BertWrapper:
 
-    def __init__(self, model_string='bert-base-multilingual-cased', reload=False):
+    def __init__(self, model_string='bert-base-multilingual-cased'):
         self.model_string = model_string
-        if not reload:
-            self.tokenizer = BertTokenizer.from_pretrained(self.model_string, do_lower_case=False)
-        else:
-            self.tokenizer = BertTokenizer.from_pretrained(self.model_string)
+        self.tokenizer = BertTokenizer.from_pretrained(self.model_string, do_lower_case=False)
         self.model = BertModel.from_pretrained(self.model_string)
-        
-
 
     def enter_eval_mode(self):
         self.model.eval()

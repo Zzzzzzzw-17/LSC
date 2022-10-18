@@ -2,7 +2,7 @@ from semeval2020.factory_hub import config_factory
 
 
 paths = {"bert_embeddings": "data/bert_embeddings/",
-         "xlmr_embeddings": ".data/xlmr_embeddings/",
+         "xlmr_embeddings": "data/xlmr_embeddings/",
          "auto_embedding_bert": "data/auto_embedded_bert/",
          "auto_embedding_xlmr": "data/auto_embedded_xlmr/",
          "answer_path_main": "my_results_main/answer/answer/",

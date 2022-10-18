@@ -1,11 +1,9 @@
 
 
 def sanitized_sentences(sentences, max_len=100):
-   
     for sentence in sentences:
         for split_sentence in __split_sentence(sentence, max_len):
             yield split_sentence
-          
 
 
 def __split_sentence(sentence, max_len):
@@ -18,15 +16,10 @@ def __split_sentence(sentence, max_len):
 
 
 def filter_for_words(sentences, target_words):
-    sent=[sentence for sentence in sentences]
-    sent_new = []
-    for sentence in sent:
-        if any([target for target in target_words if target in sentence]):
-            #print('here', f'{target} in {sentence}')
-            #yield sentence
-            sent_new.append(sentence)
+    for sentence in sentences:
+        if any((target for target in target_words if target in sentence)):
+            yield sentence
 
-    return sent_new
 
 def remove_pos_tagging(sentences, target_words):
     for sentence in sentences:
@@ -39,10 +32,8 @@ def remove_pos_tagging(sentences, target_words):
 
 
 def remove_numbers(sentences):
-    sent_new = []
     for sentence in sentences:
-        sent_new.append([token for token in sentence if not token.isdecimal()])
-    return sent_new
+        yield [token for token in sentence if not token.isdecimal()]
 
 
 def remove_pos_tagging_word(word: str):

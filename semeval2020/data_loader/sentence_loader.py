@@ -16,7 +16,6 @@ class SentenceLoader(abstract_data_loader.AbstractDataLoader):
 
     def __parse_corpus(self):
         corpus_dir = f"{self.base_path}corpora/{self.language}/{self.corpus}"
-       
         return PathLineSentences(corpus_dir)
 
     def load(self):

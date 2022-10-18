@@ -55,13 +55,10 @@ for lang_idx, language in enumerate(languages):
         embeddings_len = []
         for emb_loader in emb_loaders:
             embedding = emb_loader.lazy_load_embeddings(word)
-            print("=====================", embedding.shape)
             word_embeddings.append(embedding)
-            print(len(embedding))
             embeddings_len.append(len(embedding))
 
         x_data = np.vstack(word_embeddings)
-        print("=================", x_data.shape)
 
         preprocessor = preprocessor_factory.create_preprocessor("AutoEncoder",
                                                                 **config_factory.get_config("AutoEncoder"))

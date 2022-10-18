@@ -1,6 +1,5 @@
 from semeval2020.factory_hub import preprocessor_factory
-#import umap
-import umap.umap_ as umap
+import umap
 
 preprocessor_factory.register("UMAP", umap.UMAP)
 preprocessor_factory.register("UMAP_AE", umap.UMAP)
